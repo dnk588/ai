@@ -1,32 +1,17 @@
 import streamlit as st
-import numpy as np
-import pandas as pd
+from PIL import Image
+from segment import process
 
-df = pd.DataFrame({
-    'first column': [1, 2, 3, 4],
-    'second column': [10, 20, 30, 40]
-})
-st.write(df)
+st.title('Airplane segmentation demo')
 
-options = st.sidebar.multiselect(
-    'What are your favorite colors?',
-    ['Green', 'Yellow', 'Red', 'Blue'],
-    ['Yellow', 'Red']
-)
+image_file = st.file_uploader('Load an image', type=['png', 'jpg'])  # Добавление загрузчика файлов
 
-st.balloons()
-
-
-import time
-
-st.write('Starting a long computation...')
-
-# Add a placeholder
-latest_iteration = st.empty()
-bar = st.progress(0)
-
-for i in range(100):
-    # Update the progress bar with each iteration.
-    latest_iteration.text(f'Iteration {i+1}')
-    bar.progress(i + 1)
-    time.sleep(0.02)
+if not image_file is None:                       # Выполнение блока, если загружено изображение
+    col1, col2 = st.columns(2)                   # Создание 2 колонок # st.beta_columns(2)
+    image = Image.open(image_file)               # Открытие изображения
+    results = process(image_file)                # Обработка изображения с помощью функции, реализованной в другом файле
+    col1.text('Source image')
+    col1.image(results[0])                       # Вывод в первой колонке уменьшенного исходного изображения
+    col2.text('Mask')
+    col2.image(results[1])                       # Вывод маски второй колонке
+    st.image(results[2])                         # Вывод исходного изображения с наложенной маской (по центру)

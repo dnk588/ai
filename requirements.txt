@@ -1,3 +1,4 @@
 streamlit
+tensorflow==2.4.1
 tensorflow-cpu==2.14.0
 protobuf==3.19.1
